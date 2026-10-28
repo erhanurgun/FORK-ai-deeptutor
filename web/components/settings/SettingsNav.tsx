@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Search, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { inlineCopy } from '@/i18n/inline-copy'
 import Tooltip from '@/shared/ui/Tooltip'
 import { useSettingsAccess } from '@/features/settings/navigation/SettingsAccessProvider'
 import { settingsAnchorHref, type Lang } from '@/features/settings/navigation/settings-nav'
@@ -19,7 +20,7 @@ import {
 export default function SettingsNav({ onNavigate }: { onNavigate?: () => void }) {
   const { t, i18n } = useTranslation()
   const zh = i18n.language?.toLowerCase().startsWith('zh')
-  const tr = (label: Lang) => (zh ? label.zh : label.en)
+  const tr = (label: Lang) => inlineCopy(label, i18n.language, t)
   const pathname = usePathname()
   const access = useSettingsAccess()
   const pages = visibleSettingsPages(access)
@@ -33,9 +34,12 @@ export default function SettingsNav({ onNavigate }: { onNavigate?: () => void })
       page.label.zh,
       page.blurb.en,
       page.blurb.zh,
+      tr(page.label),
+      tr(page.blurb),
       page.key,
       page.key === 'connections' ? 'API Key token base url 密钥 凭据 地址 供应商' : '',
       ...Object.values(settingsPageLabel(page.key, page.label)),
+      tr(settingsPageLabel(page.key, page.label)),
     ]
       .join(' ')
       .toLocaleLowerCase()

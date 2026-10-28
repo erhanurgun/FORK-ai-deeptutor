@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useRouter } from 'next/navigation'
 import { Columns3, CornerDownLeft, MessageCircle, PenLine, Search, Settings, Users, type LucideIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { inlineCopy } from '@/i18n/inline-copy'
 import PartnerAvatar from '@/components/partners/PartnerAvatar'
 import { DASHBOARD_GROUPS, PERSONALIZATION_GROUPS, visibleGroups } from '@/components/space/dashboard-groups'
 import { useCapabilityFilter } from '@/features/capabilities/useCapabilityCatalog'
@@ -58,7 +59,7 @@ export function CommandPalette({
 }) {
   const { t, i18n } = useTranslation()
   const router = useRouter()
-  const zh = i18n.language.startsWith('zh')
+  const language = i18n.language
   const available = useCapabilityFilter()
   const { sources } = useLearningIndex(open)
   const { data: partnerData } = usePartnerNavigation(open)
@@ -98,7 +99,7 @@ export function CommandPalette({
             .filter(row => row.href !== '/agents' || navVisibleUnderPolicy(row.href, allowedSurfaces))
             .map(row => ({
               id: `resource:${row.key}`,
-              label: zh ? row.title.zh : row.title.en,
+              label: inlineCopy(row.title, language, t),
               detail,
               icon: glyph(row.icon),
               run: go(row.href),
@@ -153,7 +154,7 @@ export function CommandPalette({
       { title: t('navigation.learning'), items: pick(learning, q ? 6 : 0) },
       { title: t('navigation.partners'), items: pick(partners, q ? 6 : 0) },
     ].filter(group => group.items.length > 0)
-  }, [query, categories, allowedSurfaces, available, zh, sessions, sources, partnerData, onSelectSession, onNewChat, router.push, t])
+  }, [query, categories, allowedSurfaces, available, language, sessions, sources, partnerData, onSelectSession, onNewChat, router.push, t])
 
   const flat = groups.flatMap(group => group.items)
   const current = Math.min(activeIndex, Math.max(0, flat.length - 1))

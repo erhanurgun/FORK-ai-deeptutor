@@ -9,6 +9,7 @@ import type { Book, BookDepth, BookProposal } from '@/lib/book-types'
 import type { TopicSourceInput } from '@/lib/learning-api'
 import {
   useTopicSourceLibrary,
+  useSourceLibraryText,
   hydrateTopicSource,
   toggleSourceSelection,
 } from '@/hooks/useTopicSourceLibrary'
@@ -96,13 +97,14 @@ export default function BookCreator({
   const [intent, setIntent] = useState('')
   const [language, setLanguage] = useState<string>('auto')
   const [depth, setDepth] = useState<BookDepth>('standard')
+  const sourceText = useSourceLibraryText()
   const {
     library,
     loading: libraryLoading,
     candidates,
     childLists,
     loadChildren,
-  } = useTopicSourceLibrary(t)
+  } = useTopicSourceLibrary(sourceText)
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [sourceError, setSourceError] = useState('')
   const [preparing, setPreparing] = useState(false)

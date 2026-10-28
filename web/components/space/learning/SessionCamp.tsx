@@ -16,7 +16,6 @@ export function SessionCamp({
   loading,
   stale = false,
   onRetry,
-  zh,
 }: {
   pathId: string;
   sessions: TopicSession[];
@@ -24,9 +23,8 @@ export function SessionCamp({
   /** The last fetch failed; whatever is listed may be out of date. */
   stale?: boolean;
   onRetry?: () => void;
-  zh: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const router = useRouter();
   const openStudy = (sessionId?: string) =>
     router.push(
@@ -122,7 +120,7 @@ export function SessionCamp({
                     <span className="mt-0.5 block truncate text-[11px] text-[var(--muted-foreground)]">
                       {running
                         ? t("Tutor is responding")
-                        : `${session.message_count} ${t("messages")} · ${formatRelative(session.updated_at, zh)}`}
+                        : `${session.message_count} ${t("messages")} · ${formatRelative(session.updated_at, i18n.language)}`}
                     </span>
                     {session.last_message && (
                       <span className="mt-1 block truncate text-[11px] text-[var(--muted-foreground)]/75">

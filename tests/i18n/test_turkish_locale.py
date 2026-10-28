@@ -12,6 +12,7 @@ from collections import Counter
 import json
 import pathlib
 import re
+import string
 
 import pytest
 
@@ -32,6 +33,8 @@ from deeptutor.services.config.settings_spec import (
     _LANGUAGE_CHOICES,
     _RESPONSE_LANGUAGE_CHOICES,
 )
+from deeptutor.services.i18n import _MESSAGES as BACKEND_MESSAGES
+from deeptutor.services.i18n import t as backend_message
 from deeptutor.services.prompt.language import language_directive, language_label
 from deeptutor.services.settings.interface_settings import (
     _normalize_language,
@@ -117,6 +120,22 @@ def test_book_overview_and_export_copy_are_translated() -> None:
 
 def test_voice_offers_turkish() -> None:
     assert "tr" in {row["id"] for row in ISO_LANGUAGES}
+
+
+def test_backend_messages_are_translated() -> None:
+    fields = string.Formatter()
+
+    def placeholders(text: str) -> Counter[str]:
+        return Counter(name for _, name, _, _ in fields.parse(text) if name is not None)
+
+    assert set(BACKEND_MESSAGES["tr"]) == set(BACKEND_MESSAGES["en"])
+    mismatches = [
+        key
+        for key, text in BACKEND_MESSAGES["en"].items()
+        if placeholders(text) != placeholders(BACKEND_MESSAGES["tr"][key])
+    ]
+    assert mismatches == []
+    assert backend_message("api.partner_not_found", language="tr-TR") == "Partner bulunamadı"
 
 
 def test_web_locale_covers_every_english_key() -> None:

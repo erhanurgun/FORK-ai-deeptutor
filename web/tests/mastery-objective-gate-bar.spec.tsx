@@ -45,7 +45,7 @@ describe("objective gate bar", () => {
     // The reading that made this necessary: mastery 1.0 against threshold 1.0
     // on an objective that is not mastered. Shown as a bar it says "full, yet
     // not cleared" — beside an outline dot that is correctly still hollow.
-    render(<ObjectiveDetail report={report()} zh={false} />);
+    render(<ObjectiveDetail report={report()} />);
 
     expect(screen.getByText("0%")).toBeTruthy();
     expect(screen.queryByText("100%")).toBeNull();
@@ -63,7 +63,6 @@ describe("objective gate bar", () => {
           status: "mastered",
           mastery_source: "system",
         })}
-        zh={false}
       />,
     );
 
@@ -82,7 +81,6 @@ describe("objective gate bar", () => {
           mastery: 0.5,
           threshold: 0.9,
         })}
-        zh={false}
       />,
     );
 

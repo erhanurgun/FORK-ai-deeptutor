@@ -99,7 +99,6 @@ const MasteryHandoff = memo(function MasteryHandoff({
   data: MasteryHandoffPayload;
 }) {
   const { t, i18n } = useTranslation();
-  const zh = Boolean(i18n.language?.toLowerCase().startsWith("zh"));
   const router = useRouter();
   const [draft, setDraft] = useState(data.opening_message);
 
@@ -210,7 +209,7 @@ const MasteryHandoff = memo(function MasteryHandoff({
                   </span>
                 ) : data.session_updated_at > 0 ? (
                   <span className="shrink-0">
-                    {formatRelative(data.session_updated_at, zh)}
+                    {formatRelative(data.session_updated_at, i18n.language)}
                   </span>
                 ) : null}
               </span>

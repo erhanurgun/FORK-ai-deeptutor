@@ -9,6 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
+import { inlineCopy } from "@/i18n/inline-copy";
 import {
   ArrowLeft,
   ArrowRight,
@@ -547,9 +548,7 @@ export default function MasteryTopicPage() {
                   ? t(
                       "This goal has no outline yet. Open a session and the tutor will design one with you.",
                     )
-                  : zh
-                    ? nextCopy.zh
-                    : nextCopy.en}
+                  : inlineCopy(nextCopy, i18n.language, t)}
               </p>
             </div>
           </div>
@@ -587,9 +586,7 @@ export default function MasteryTopicPage() {
               className="inline-flex h-9 shrink-0 items-center justify-center gap-1.5 rounded-lg bg-[var(--primary)] px-3.5 text-[13px] font-medium text-[var(--primary-foreground)] transition hover:opacity-90"
             >
               {nextCta
-                ? zh
-                  ? nextCta.zh
-                  : nextCta.en
+                ? inlineCopy(nextCta, i18n.language, t)
                 : topic.session_count > 0
                   ? t("Continue learning")
                   : t("Begin first waypoint")}
@@ -687,7 +684,6 @@ export default function MasteryTopicPage() {
                   topic={topic}
                   revision={Math.max(topic.path_revision, activity.revision)}
                   selectedId={selectedId}
-                  zh={zh}
                   onSelect={setSelectedId}
                   onOverride={handleOverride}
                 />
@@ -696,7 +692,6 @@ export default function MasteryTopicPage() {
                   pathId={pathId}
                   modules={board.modules}
                   revision={Math.max(topic.path_revision, activity.revision)}
-                  zh={zh}
                   onStartTutoring={startBoardTutoring}
                 />
               ) : boardError ? (
@@ -731,7 +726,6 @@ export default function MasteryTopicPage() {
                 onStrategySave={handleStrategySave}
                 onStrategyDuplicate={handleStrategyDuplicate}
                 onStrategyDelete={handleStrategyDelete}
-                zh={zh}
                 onSelect={(objectiveId) => {
                   setSelectedId(objectiveId);
                   document
@@ -756,7 +750,6 @@ export default function MasteryTopicPage() {
               loading={sessionsLoading}
               stale={sessionsError}
               onRetry={() => void loadSessions()}
-              zh={zh}
             />
           </div>
         </div>

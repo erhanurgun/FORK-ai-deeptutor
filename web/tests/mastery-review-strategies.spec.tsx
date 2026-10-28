@@ -67,7 +67,6 @@ function renderTrail(overrides: Partial<Parameters<typeof ReviewTrail>[0]> = {})
       onStrategySave={vi.fn()}
       onStrategyDuplicate={vi.fn()}
       onStrategyDelete={vi.fn()}
-      zh={false}
       onSelect={vi.fn()}
       onStartReview={vi.fn()}
       {...overrides}

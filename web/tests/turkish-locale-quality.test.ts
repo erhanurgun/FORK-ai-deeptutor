@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import path from 'node:path'
+import ts from 'typescript'
 
 function findLocalesRoot(): string {
   let dir = __dirname
@@ -112,4 +113,60 @@ test('every catalog names Turkish by its endonym', () => {
   for (const locale of ['en', 'zh', 'fr', 'de', 'uk', 'pl', 'tr']) {
     assert.equal(readCatalog(locale)['language.turkish'], 'Türkçe', locale)
   }
+})
+
+const webRoot = process.cwd()
+const HAN = /[\u3400-\u9fff]/
+
+function sourceFiles(directory: string): string[] {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const file = path.join(directory, entry.name)
+    if (entry.isDirectory()) return sourceFiles(file)
+    return /\.tsx?$/.test(entry.name) && !entry.name.endsWith('.d.ts') ? [file] : []
+  })
+}
+
+function literal(node: ts.Node | undefined): string | undefined {
+  return node && (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node))
+    ? node.text
+    : undefined
+}
+
+// Inline copy such as `{ en, zh }` or `tr('中文', 'English')` reaches Turkish through its English text.
+function inlineEnglishCopy(): Map<string, string> {
+  const copy = new Map<string, string>()
+  for (const directory of ['app', 'components', 'features', 'hooks', 'lib', 'shared']) {
+    for (const file of sourceFiles(path.join(webRoot, directory))) {
+      const relative = path.relative(webRoot, file)
+      const source = ts.createSourceFile(file, fs.readFileSync(file, 'utf8'), ts.ScriptTarget.Latest, true)
+      const visit = (node: ts.Node) => {
+        if (ts.isObjectLiteralExpression(node)) {
+          const values = new Map<string, ts.Expression>()
+          for (const property of node.properties) {
+            if (ts.isPropertyAssignment(property) && ts.isIdentifier(property.name)) {
+              values.set(property.name.text, property.initializer)
+            }
+          }
+          const en = literal(values.get('en'))
+          if (en && literal(values.get('zh')) !== undefined) copy.set(en, relative)
+        }
+        if (ts.isCallExpression(node) && node.arguments.length === 2) {
+          const [first, second] = node.arguments.map(literal)
+          if (first !== undefined && second !== undefined && HAN.test(first) !== HAN.test(second)) {
+            copy.set(HAN.test(first) ? second : first, relative)
+          }
+        }
+        ts.forEachChild(node, visit)
+      }
+      visit(source)
+    }
+  }
+  return copy
+}
+
+test('inline en/zh copy has a Turkish entry', () => {
+  const missing = [...inlineEnglishCopy()]
+    .filter(([english]) => !Object.hasOwn(catalog, english))
+    .map(([english, file]) => `${file}: ${english}`)
+  assert.deepEqual(missing, [])
 })

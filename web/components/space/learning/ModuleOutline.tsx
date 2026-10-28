@@ -79,14 +79,12 @@ export function ModuleOutline({
   topic,
   revision,
   selectedId,
-  zh,
   onSelect,
   onOverride,
 }: {
   topic: MasteryTopic;
   revision: number;
   selectedId: string | null;
-  zh: boolean;
   onSelect: (id: string | null) => void;
   onOverride: (
     objectiveId: string,
@@ -175,7 +173,6 @@ export function ModuleOutline({
                         pathId={topic.path_id}
                         objectiveId={point.id}
                         revision={revision}
-                        zh={zh}
                         onClose={() => onSelect(null)}
                         onOverride={onOverride}
                       />
@@ -195,14 +192,12 @@ function ObjectiveDrawer({
   pathId,
   objectiveId,
   revision,
-  zh,
   onClose,
   onOverride,
 }: {
   pathId: string;
   objectiveId: string;
   revision: number;
-  zh: boolean;
   onClose: () => void;
   onOverride: (
     objectiveId: string,
@@ -269,7 +264,7 @@ function ObjectiveDrawer({
               {t("Collapse")}
             </button>
           </div>
-          <ObjectiveDetail report={report} zh={zh} />
+          <ObjectiveDetail report={report} />
 
           {!report.assessed_mastered && (
             <div className="mt-5 pt-1">

@@ -1,5 +1,6 @@
 'use client'
 import { useTranslation } from 'react-i18next'
+import { useInlineCopy } from '@/i18n/inline-copy'
 import { NavigationRow, OverviewRow, Section } from './NavigationPrimitives'
 import { PersonalizationShelfIcon, ResourcesShelfIcon } from './ShelfIcons'
 import {
@@ -12,15 +13,14 @@ import { useCapabilityFilter } from '@/features/capabilities/useCapabilityCatalo
 import { navVisibleUnderPolicy } from './nav-entries'
 
 function Shelf({ groups, titled }: { groups: DashboardGroup[]; titled: boolean }) {
-  const { i18n } = useTranslation()
+  const tr = useInlineCopy()
   const available = useCapabilityFilter()
-  const zh = i18n.language.startsWith('zh')
   return visibleGroups(groups, available).map(group => {
     const rows = group.items.map(row => (
-      <NavigationRow key={row.key} href={row.href} label={zh ? row.title.zh : row.title.en} icon={row.icon} />
+      <NavigationRow key={row.key} href={row.href} label={tr(row.title)} icon={row.icon} />
     ))
     return titled ? (
-      <Section key={group.label.en} title={zh ? group.label.zh : group.label.en}>
+      <Section key={group.label.en} title={tr(group.label)}>
         {rows}
       </Section>
     ) : (

@@ -4,6 +4,7 @@ import { PageHeader, PAGE_SECTION_TITLE_CLASS, pageGridClass } from '@/component
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { useInlineCopy } from "@/i18n/inline-copy";
 import { useUiLayoutLabel } from "@/features/ui-layout/tokens";
 import { useCapabilityFilter } from "@/features/capabilities/useCapabilityCatalog";
 import {
@@ -49,7 +50,7 @@ export default function SpaceDashboard({
   const { i18n } = useTranslation();
   const spaceLabel = useUiLayoutLabel("space");
   const zh = i18n.language?.toLowerCase().startsWith("zh");
-  const tr = useCallback((l: Lang) => (zh ? l.zh : l.en), [zh]);
+  const tr = useInlineCopy();
 
   const [counts, setCounts] = useState<Partial<Record<DashKey, number>>>({});
 

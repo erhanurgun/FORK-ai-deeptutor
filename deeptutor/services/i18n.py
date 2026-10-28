@@ -9,6 +9,8 @@ def _parse_language(language: str | None) -> str:
     raw = (language or "en").strip().lower()
     if raw.startswith("zh") or raw in {"cn", "chinese"}:
         return "zh"
+    if raw.startswith("tr") or raw in {"turkish", "türkçe"}:
+        return "tr"
     return "en"
 
 
@@ -106,6 +108,64 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sandbox.command_blocked": "错误：命令被安全防护拦截（匹配危险模式）。",
         "sandbox.disabled_for_account": "你的账号已禁用代码执行。",
         "sandbox.no_backend": "没有可用的沙箱后端",
+    },
+    "tr": {
+        "api.content_required": "İçerik gerekli",
+        "api.invalid_channels_config": "Geçersiz kanal yapılandırması",
+        "api.partner_already_exists": "'{name}' adlı partner zaten var",
+        "api.partner_not_found": "Partner bulunamadı",
+        "api.partner_not_found_or_not_running": "Partner bulunamadı ya da çalışmıyor",
+        "api.partner_not_running": "Partner çalışmıyor",
+        "api.partner_stopped_start_required": "Partner durduruldu. Sohbet etmeden önce başlatın.",
+        "api.persona_already_exists": "Persona zaten var: {name}",
+        "api.persona_name_required": "Persona adı gerekli",
+        "api.persona_not_found": "Persona bulunamadı: {name}",
+        "api.soul_already_exists": "'{name}' adlı soul zaten var",
+        "api.soul_content_empty": "Özel soul içeriği boş",
+        "api.soul_library_not_found": "'{name}' adlı soul kitaplıkta bulunamadı",
+        "api.soul_not_found": "Soul bulunamadı",
+        "api.tool_not_found": "'{name}' adlı araç bulunamadı",
+        "cli_apps.abi_mismatch": (
+            "{app!r} adlı CLI uygulaması {installed} için kurulmuş, ancak bu çalışma "
+            "ortamı {current}. Bir yöneticinin uygulamayı yeniden kurması gerekiyor."
+        ),
+        "cli_apps.args_required": (
+            "{tool} için bir 'args' dizisi gerekli; her öğe bir komut satırı argümanı olmalı."
+        ),
+        "cli_apps.entry_admin_only": (
+            "CLI uygulamalarını bir yönetici kurar; bunu eklemesi için yöneticinize başvurun."
+        ),
+        "cli_apps.install_in_progress": "Bu uygulama zaten kuruluyor.",
+        "cli_apps.not_in_catalog": "Katalogda {id!r} adlı bir CLI uygulaması yok.",
+        "cli_apps.not_installed": "{app!r} adlı CLI uygulaması artık bu kurulumda yüklü değil.",
+        "cli_apps.still_running": "{app} hâlâ çalışıyor ({seconds} sn)",
+        "mcp.configure_command_or_url": (
+            "{name!r} sunucusu: bir komut (stdio) ya da bir URL yapılandırın."
+        ),
+        "mcp.configure_before_testing": (
+            "Test etmeden önce bir komut (stdio) ya da bir URL yapılandırın."
+        ),
+        "mcp.server_error": "{name!r} sunucusu: {error}",
+        "mcp.server_missing": "Listenizde {name!r} adlı bir sunucu yok.",
+        "mcp.not_oauth": "Bu sunucu OAuth kullanmıyor; bunun yerine bir kimlik bilgisi girin.",
+        "mcp.oauth_callback_incomplete": "Yetkilendirme yanıtı eksikti.",
+        "mcp.oauth_callback_unknown": (
+            "Bu yetkilendirmenin süresi dolmuş ya da yetkilendirme zaten tamamlanmış. "
+            "Yeniden başlatın."
+        ),
+        "mcp.oauth_done": "Yetkilendirildi. Bu sekmeyi kapatabilirsiniz.",
+        "mcp.oauth_failed": "Yetkilendirme başarısız oldu.",
+        "mcp.catalog_entry_missing": "Katalogda {id!r} adlı bir MCP hizmeti yok.",
+        "mcp.entry_admin_only": (
+            "Bu hizmet yerel bir komut olarak çalışır ve yalnız bir yönetici tarafından "
+            "eklenebilir."
+        ),
+        "mcp.tool_not_available": (
+            "Bu araç bu sohbette kullanılamaz. Yalnız prompt'ta listelenen araçlar çağrılabilir."
+        ),
+        "sandbox.command_blocked": "Hata: komut güvenlik korumasına takıldı (tehlikeli kalıp).",
+        "sandbox.disabled_for_account": "Hesabınız için kod çalıştırma devre dışı.",
+        "sandbox.no_backend": "kullanılabilir korumalı alan arka ucu yok",
     },
 }
 

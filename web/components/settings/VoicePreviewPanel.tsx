@@ -40,12 +40,10 @@ function PreviewRequest({
   modelId: string
   maxChars: number
 }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { draft } = useSettings()
   const [text, setText] = useState(() =>
-    i18n?.language?.startsWith('zh')
-      ? '你好，我是你的学习伙伴。让我们一起探索新的知识。'
-      : 'Hello, I am your learning companion. Let us explore something new together.'
+    t('Hello, I am your learning companion. Let us explore something new together.')
   )
   const [pending, setPending] = useState(false)
   const [url, setUrl] = useState<string | null>(null)

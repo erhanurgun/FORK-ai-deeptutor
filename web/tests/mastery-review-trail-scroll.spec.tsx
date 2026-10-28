@@ -67,7 +67,6 @@ function renderTrail(reviews: TopicReview[]) {
       onStrategySave={vi.fn()}
       onStrategyDuplicate={vi.fn()}
       onStrategyDelete={vi.fn()}
-      zh={false}
       onSelect={vi.fn()}
       onStartReview={vi.fn()}
     />

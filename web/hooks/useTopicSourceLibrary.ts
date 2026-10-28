@@ -4,6 +4,7 @@ import type { LearningOrigin } from '@/lib/learning-library'
 import { apiFetch, apiUrl } from '@/lib/api'
 import { scopedUrl } from '@/lib/workspace-scope'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useInlineCopy } from '@/i18n/inline-copy'
 
 import { SUBAGENT_KB_TYPE } from '@/lib/knowledge-helpers'
 import type { TopicSourceInput, TopicSourceKind } from '@/lib/learning-api'
@@ -93,6 +94,11 @@ const EMPTY_LIBRARY: SourceLibrary = {
 const MAX_CATEGORY_ENTRIES = 50
 
 type Translate = (cn: string, en: string) => string
+
+export function useSourceLibraryText(): Translate {
+  const inline = useInlineCopy()
+  return useCallback((cn: string, en: string) => inline({ zh: cn, en }), [inline])
+}
 
 export function useTopicSourceLibrary(tr: Translate) {
   const [library, setLibrary] = useState<SourceLibrary>(EMPTY_LIBRARY)

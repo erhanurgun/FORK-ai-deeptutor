@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { inlineCopy } from "@/i18n/inline-copy";
 
 import ProviderIcon from "@/components/common/ProviderIcon";
 import { ProviderModelDiscovery } from "./ProviderModelDiscovery";
@@ -151,7 +152,7 @@ export function ConnectionsEditor() {
   }
 
   const label = (service: ServiceName) =>
-    zh ? SERVICE_LABEL[service].zh : SERVICE_LABEL[service].en;
+    inlineCopy(SERVICE_LABEL[service], i18n.language, t);
 
   return (
     <div>
@@ -535,7 +536,7 @@ function AddConnectionPanel({
   );
 
   const label = (service: ServiceName) =>
-    zh ? SERVICE_LABEL[service].zh : SERVICE_LABEL[service].en;
+    inlineCopy(SERVICE_LABEL[service], i18n.language, t);
 
   const choose = (next: string) => {
     setProvider(next);

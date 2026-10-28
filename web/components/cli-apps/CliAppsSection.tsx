@@ -18,6 +18,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { normalizeLanguage } from "@/i18n/languages";
+import { getLocale } from "@/lib/datetime";
 
 import BrandIcon, { TrademarkNote } from "@/components/common/BrandIcon";
 import SpaceSectionHeader from "@/components/space/SpaceSectionHeader";
@@ -50,8 +52,7 @@ type Tab = "installed" | "store";
  * store read-only and the page says so rather than offering a button that 403s.
  */
 export default function CliAppsSection() {
-  const { t, i18n } = useTranslation();
-  const zh = i18n.language?.toLowerCase().startsWith("zh");
+  const { t } = useTranslation();
   const { isAdmin, loading: authLoading } = useAuthStatus();
 
   const [state, setState] = useState<CliAppState | null>(null);
@@ -130,7 +131,6 @@ export default function CliAppsSection() {
         <Installed
           state={state}
           isAdmin={isAdmin}
-          zh={zh}
           onChanged={setState}
           onBrowse={() => setTab("store")}
         />
@@ -144,17 +144,15 @@ export default function CliAppsSection() {
 function Installed({
   state,
   isAdmin,
-  zh,
   onChanged,
   onBrowse,
 }: {
   state: CliAppState | null;
   isAdmin: boolean;
-  zh: boolean;
   onChanged: (next: CliAppState) => void;
   onBrowse: () => void;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -246,7 +244,7 @@ function Installed({
                 <p className="mt-1.5 text-[11px] text-[var(--muted-foreground)]/80">
                   {app.installed_at
                     ? t("Installed {{when}}", {
-                        when: formatDay(app.installed_at, zh),
+                        when: formatDay(app.installed_at, i18n.language),
                       })
                     : ""}
                   {app.pin ? ` · ${app.pin.slice(0, 12)}` : ""}
@@ -1014,10 +1012,10 @@ function messageOf(error: unknown): string {
   return "";
 }
 
-function formatDay(iso: string, zh: boolean): string {
+function formatDay(iso: string, language: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return iso;
-  return date.toLocaleDateString(zh ? "zh-CN" : "en-US", {
+  return date.toLocaleDateString(getLocale(normalizeLanguage(language)), {
     year: "numeric",
     month: "short",
     day: "numeric",

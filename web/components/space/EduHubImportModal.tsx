@@ -4,6 +4,7 @@ import Tooltip from "@/shared/ui/Tooltip";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useTranslation } from "react-i18next";
+import { useInlineCopy } from "@/i18n/inline-copy";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -59,9 +60,8 @@ export default function EduHubImportModal({
   /** Names of skills already installed locally — shown as "已导入". */
   installedNames?: Set<string>;
 }) {
-  const { i18n } = useTranslation();
-  const zh = i18n.language?.toLowerCase().startsWith("zh");
-  const tr = useCallback((cn: string, en: string) => (zh ? cn : en), [zh]);
+  const inline = useInlineCopy();
+  const tr = useCallback((cn: string, en: string) => inline({ zh: cn, en }), [inline]);
 
   const [skills, setSkills] = useState<HubSkillListing[] | null>(null);
   const [webUrl, setWebUrl] = useState<string>(EDUHUB_FALLBACK);

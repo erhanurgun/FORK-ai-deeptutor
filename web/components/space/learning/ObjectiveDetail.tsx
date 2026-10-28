@@ -16,14 +16,8 @@ import { formatAbsolute, formatRelative, type Translate } from "./format";
  * the threshold marked, because a hard gate is only legible if you can see how
  * far away it is.
  */
-export function ObjectiveDetail({
-  report,
-  zh,
-}: {
-  report: ObjectiveReport;
-  zh: boolean;
-}) {
-  const { t } = useTranslation();
+export function ObjectiveDetail({ report }: { report: ObjectiveReport }) {
+  const { t, i18n } = useTranslation();
   const qualitative = report.gate === "qualitative";
   const evidence = report.evidence ?? [];
   const evidenceCount = report.evidence_count ?? evidence.length;
@@ -35,8 +29,8 @@ export function ObjectiveDetail({
         <Row label={t("Spaced review")}>
           {report.review.due_at
             ? t("Due {{relative}} · {{absolute}}", {
-                relative: formatRelative(report.review.due_at, zh),
-                absolute: formatAbsolute(report.review.due_at, zh),
+                relative: formatRelative(report.review.due_at, i18n.language),
+                absolute: formatAbsolute(report.review.due_at, i18n.language),
               })
             : t("Not scheduled")}
           <span className="ml-2 text-[var(--muted-foreground)]">
@@ -92,7 +86,7 @@ export function ObjectiveDetail({
                     {t("You said: ")}
                     {attempt.answer || t("(blank)")}
                     <span className="ml-2">
-                      {formatRelative(attempt.at, zh)}
+                      {formatRelative(attempt.at, i18n.language)}
                     </span>
                   </div>
                 </div>
@@ -138,7 +132,7 @@ export function ObjectiveDetail({
                   {evidence.quality !== null &&
                     ` · ${Math.round(evidence.quality * 100)}%`}
                 </span>
-                <span className="shrink-0">{formatRelative(evidence.timestamp, zh)}</span>
+                <span className="shrink-0">{formatRelative(evidence.timestamp, i18n.language)}</span>
               </li>
             ))}
           </ul>

@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Loader2, Lock, Search, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
+import { inlineCopy } from "@/i18n/inline-copy";
 
 import { useSettings } from "@/features/settings/store/SettingsStore";
 import { SettingsPageHeader } from "@/components/settings/shared";
@@ -146,36 +147,31 @@ export default function ToolsSettingsPage() {
     if (experience.length) {
       out.push({
         key: "experience",
-        label: zh ? "体验增强" : "Experience Enhancement",
-        hint: zh
-          ? "用户可选；按需为 chat agent 开启或关闭。"
-          : "User-toggleable. Switch on or off to shape the chat agent's behavior.",
+        label: t("Experience Enhancement"),
+        hint: t("User-toggleable. Switch on or off to shape the chat agent's behavior."),
         tools: experience,
       });
     }
     if (builtin.length) {
       out.push({
         key: "builtin",
-        label: zh ? "内置工具" : "Built-in Tools",
-        hint: zh
-          ? "Chat agent 在需要时自动挂载，无需手动开关。"
-          : "Mounted automatically by the chat agent when needed. Not user-toggleable.",
+        label: t("Built-in Tools"),
+        hint: t("Mounted automatically by the chat agent when needed. Not user-toggleable."),
         tools: builtin,
       });
     }
     for (const [cap, list] of capabilities) {
-      const label = CAPABILITY_LABELS[cap]?.[zh ? "zh" : "en"] ?? cap;
+      const names = CAPABILITY_LABELS[cap];
+      const label = names ? inlineCopy(names, language, t) : cap;
       out.push({
         key: `cap:${cap}`,
-        label: zh ? `${label} · 能力工具` : `${label} · Capability Tools`,
-        hint: zh
-          ? "该能力的专属工具，仅在此能力运行时挂载。"
-          : "Tools specific to this capability; mounted only when it runs.",
+        label: t("{{label}} · Capability Tools", { label }),
+        hint: t("Tools specific to this capability; mounted only when it runs."),
         tools: list,
       });
     }
     return out;
-  }, [tools, language]);
+  }, [tools, language, t]);
 
   const filteredSections = useMemo<ToolSection[] | null>(() => {
     if (!sections) return null;
@@ -374,9 +370,7 @@ export default function ToolsSettingsPage() {
                                 )}
                                 {isComingSoon && (
                                   <span className="inline-flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--muted)]/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[var(--muted-foreground)]">
-                                    {language === "zh"
-                                      ? "敬请期待"
-                                      : "Coming soon"}
+                                    {t("Coming soon")}
                                   </span>
                                 )}
                                 {availability && !isComingSoon && (
@@ -402,9 +396,7 @@ export default function ToolsSettingsPage() {
                                       href={availability.href}
                                       className="font-medium underline underline-offset-2"
                                     >
-                                      {language === "zh"
-                                        ? "打开设置"
-                                        : "Open settings"}
+                                      {t("Open settings")}
                                     </Link>
                                   )}
                                 </p>
@@ -424,9 +416,7 @@ export default function ToolsSettingsPage() {
                                 onChange={() => {
                                   /* locked */
                                 }}
-                                label={
-                                  language === "zh" ? "敬请期待" : "Coming soon"
-                                }
+                                label={t("Coming soon")}
                               />
                             ) : !isAvailable ? (
                               <ToolToggle

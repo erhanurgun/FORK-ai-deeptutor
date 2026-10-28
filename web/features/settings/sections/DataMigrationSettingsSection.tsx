@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useInlineCopy } from '@/i18n/inline-copy'
 import { Download, FolderInput, RefreshCw } from 'lucide-react'
 import { apiFetch, apiUrl } from '@/lib/api'
 import { useChatWorkspaces } from '@/hooks/useChatWorkspaces'
@@ -72,9 +73,8 @@ async function request<T>(path: string, body?: object): Promise<T> {
 }
 
 export default function DataMigrationSettingsSection() {
-  const { i18n } = useTranslation()
-  const zh = i18n.language.startsWith('zh')
-  const text = (en: string, cn: string) => (zh ? cn : en)
+  const inline = useInlineCopy()
+  const text = (en: string, cn: string) => inline({ en, zh: cn })
   const { workspaces } = useChatWorkspaces()
   const [source, setSource] = useState(activeWorkspaceId)
   const [target, setTarget] = useState('')
@@ -85,7 +85,7 @@ export default function DataMigrationSettingsSection() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [historical, setHistorical] = useState(false)
-  const label = (key: string) => labels[key]?.[zh ? 1 : 0] ?? key
+  const label = (key: string) => (labels[key] ? text(...labels[key]) : key)
   const statusLabel = (key: string) => ({
     preparing: text('Preparing', '准备中'), copying: text('Copying', '复制中'),
     transferring: text('Transferring', '迁移中'), committed: text('Finishing', '收尾中'),

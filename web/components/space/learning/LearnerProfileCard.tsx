@@ -2,6 +2,7 @@
 
 import { UserRound } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { inlineCopy } from "@/i18n/inline-copy";
 
 import type { LearnerProfile } from "@/lib/learning-api";
 import { TEACH_FIRST_PROFILE_LABEL } from "./next-step-copy";
@@ -19,9 +20,7 @@ import { TEACH_FIRST_PROFILE_LABEL } from "./next-step-copy";
 export function LearnerProfileCard({ profile }: { profile: LearnerProfile | null }) {
   const { t, i18n } = useTranslation();
   const teachFirst = profile?.teaching_strategy === "teach_first"
-    ? i18n.language?.toLowerCase().startsWith("zh")
-      ? TEACH_FIRST_PROFILE_LABEL.zh
-      : TEACH_FIRST_PROFILE_LABEL.en
+    ? inlineCopy(TEACH_FIRST_PROFILE_LABEL, i18n.language, t)
     : "";
   const teachingPreference = [profile?.preferences?.trim(), teachFirst]
     .filter(Boolean)

@@ -15,7 +15,7 @@ function useShelves() {
   const isAvailable = useCapabilityFilter()
   return pageSections({
     t,
-    zh: (i18n?.language ?? '').startsWith('zh'),
+    language: i18n?.language ?? 'en',
     allowedSurfaces: learningPolicy?.allowedSurfaces ?? null,
     isAvailable,
   })

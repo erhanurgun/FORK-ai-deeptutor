@@ -25,6 +25,7 @@ import {
 } from "@/components/UserAvatar";
 import { parseAvatarMarker } from "@/lib/avatar";
 import { formatDate, type Language } from "@/lib/datetime";
+import { normalizeLanguage } from "@/i18n/languages";
 import { accountRoleLabelKey } from "@/lib/account-role";
 
 const AVATAR_OUTPUT_SIZE = 256;
@@ -200,7 +201,7 @@ export default function ProfilePage() {
         ? null
         : fallback.color;
   const isAdmin = profile?.role === "admin";
-  const lang: Language = i18n.language?.startsWith("zh") ? "zh" : "en";
+  const lang: Language = normalizeLanguage(i18n.language);
   const joinedDate = profile?.created_at ? new Date(profile.created_at) : null;
   const joined =
     joinedDate && !Number.isNaN(joinedDate.getTime())

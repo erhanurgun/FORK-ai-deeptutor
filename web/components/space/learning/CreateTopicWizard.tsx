@@ -16,6 +16,7 @@ import { useModalDialog } from "@/hooks/useModalDialog";
 import {
   hydrateTopicSource,
   toggleSourceSelection,
+  useSourceLibraryText,
   useTopicSourceLibrary,
 } from "@/hooks/useTopicSourceLibrary";
 import {
@@ -25,7 +26,6 @@ import {
   type TopicSourceInput,
 } from "@/lib/learning-api";
 
-import type { Translate } from "./format";
 import { GoalStep, SourcesStep } from "./TopicWizardSteps";
 
 /**
@@ -55,13 +55,14 @@ export function CreateTopicWizard({
   const [step, setStep] = useState(1);
   const [goal, setGoal] = useState("");
   const [emoji, setEmoji] = useState("🧭");
+  const sourceText = useSourceLibraryText();
   const {
     library,
     loading: libraryLoading,
     candidates,
     childLists,
     loadChildren,
-  } = useTopicSourceLibrary(t as Translate);
+  } = useTopicSourceLibrary(sourceText);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
