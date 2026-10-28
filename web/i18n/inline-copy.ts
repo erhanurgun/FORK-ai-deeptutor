@@ -16,10 +16,22 @@ export function inlineCopy(
   language: string | undefined,
   t: (key: string) => string,
 ): string {
+  if (normalizeLanguage(language) === "zh") return copy.zh;
+  return catalogText(copy.en, language, t);
+}
+
+/**
+ * Server text that only ships in English and Chinese, such as tool hints:
+ * other languages show their catalog entry for it when one exists.
+ */
+export function catalogText(
+  text: string,
+  language: string | undefined,
+  t: (key: string) => string,
+): string {
   const code = normalizeLanguage(language);
-  if (code === "zh") return copy.zh;
-  if (code === "en") return copy.en;
-  return t(copy.en);
+  if (!text || code === "en" || code === "zh") return text;
+  return t(text);
 }
 
 export function useInlineCopy(): (copy: InlineCopy) => string {

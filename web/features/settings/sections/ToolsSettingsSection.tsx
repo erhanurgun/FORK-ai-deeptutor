@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Loader2, Lock, Search, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-import { inlineCopy } from "@/i18n/inline-copy";
+import { catalogText, inlineCopy } from "@/i18n/inline-copy";
 
 import { useSettings } from "@/features/settings/store/SettingsStore";
 import { SettingsPageHeader } from "@/components/settings/shared";
@@ -185,9 +185,14 @@ export default function ToolsSettingsPage() {
           const hints = tool.hints[hintLanguage] ?? tool.hints.en;
           const alternateHints =
             tool.hints[hintLanguage === "zh" ? "en" : "zh"] ?? tool.hints.en;
+          const shown = (value: string) => catalogText(value, language, t);
           const searchableText = [
             tool.name,
             tool.description,
+            shown(hints.short_description || tool.description),
+            shown(hints.when_to_use),
+            shown(hints.guideline),
+            shown(hints.note),
             ...tool.aliases,
             hints.short_description,
             hints.when_to_use,
@@ -218,7 +223,7 @@ export default function ToolsSettingsPage() {
         }),
       }))
       .filter((section) => section.tools.length > 0);
-  }, [hintLanguage, query, sections]);
+  }, [hintLanguage, language, query, sections, t]);
 
   const toggleExpanded = (name: string) => {
     setExpanded((prev) => {
@@ -375,7 +380,7 @@ export default function ToolsSettingsPage() {
                                 )}
                                 {availability && !isComingSoon && (
                                   <span className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-300">
-                                    {availability.badge}
+                                    {catalogText(availability.badge, language, t)}
                                   </span>
                                 )}
                               </div>
@@ -386,11 +391,11 @@ export default function ToolsSettingsPage() {
                                     : "text-[var(--muted-foreground)]"
                                 }`}
                               >
-                                {hints.short_description || tool.description}
+                                {catalogText(hints.short_description || tool.description, language, t)}
                               </p>
                               {availability && !isComingSoon && (
                                 <p className="mt-1 text-[11.5px] leading-relaxed text-amber-700 dark:text-amber-300">
-                                  {availability.detail}{" "}
+                                  {catalogText(availability.detail, language, t)}{" "}
                                   {availability.href && (
                                     <Link
                                       href={availability.href}
@@ -460,24 +465,24 @@ export default function ToolsSettingsPage() {
                             {hints.when_to_use && (
                               <Field
                                 label={t("When to use")}
-                                body={hints.when_to_use}
+                                body={catalogText(hints.when_to_use, language, t)}
                               />
                             )}
                             {hints.input_format && (
                               <Field
                                 label={t("Input format")}
-                                body={hints.input_format}
+                                body={catalogText(hints.input_format, language, t)}
                                 mono
                               />
                             )}
                             {hints.guideline && (
                               <Field
                                 label={t("Guideline")}
-                                body={hints.guideline}
+                                body={catalogText(hints.guideline, language, t)}
                               />
                             )}
                             {hints.note && (
-                              <Field label={t("Note")} body={hints.note} />
+                              <Field label={t("Note")} body={catalogText(hints.note, language, t)} />
                             )}
                             {tool.parameters.length > 0 && (
                               <div>
@@ -501,7 +506,7 @@ export default function ToolsSettingsPage() {
                                       </span>
                                       {p.description && (
                                         <span className="text-[12px] text-[var(--muted-foreground)]">
-                                          — {p.description}
+                                          — {catalogText(p.description, language, t)}
                                         </span>
                                       )}
                                     </li>
